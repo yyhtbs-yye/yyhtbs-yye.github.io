@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Chart from Backend</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div id="plotly-chart"></div>
+
+<script>
+    $(document).ready(function() {
+        // Fetch chart data from the backend
+        $.get('https://raw.githubusercontent.com/yyhtbs-yye/dv4_data/main/plotly.json', function(data) {
+            let plotData = JSON.parse(data);
+            Plotly.newPlot('plotly-chart', plotData.data, plotData.layout);
+        });
+    });
+</script>
+
+</body>
+</html>
