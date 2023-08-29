@@ -11,16 +11,26 @@
 
 <div id="plotly-chart"></div>
 
-<script>
-    $(document).ready(function() {
-        let file_name = window.location.pathname;
-        // Fetch chart data from the backend
-        $.get('https://raw.githubusercontent.com/yyhtbs-yye/dv4_data/main/'+file_name, function(data) {
-            let plotData = JSON.parse(data);
-            Plotly.newPlot('plotly-chart', plotData.data, plotData.layout);
+    <script>
+        $(document).ready(function() {
+            // Extract the 'data' parameter from the URL
+            let dataParam = new URLSearchParams(window.location.search).get('data');
+
+            if (!dataParam) {
+                alert('Data parameter not provided!');
+                return;
+            }
+
+            // Construct the GitHub raw URL based on the parameter
+            let rawGitHubURL = `https://raw.githubusercontent.com/yyhtbs-yye/dv4_data/main/${dataParam}.json`;
+
+            // Fetch chart data from GitHub
+            $.get(rawGitHubURL, function(data) {
+                let plotData = JSON.parse(data);
+                Plotly.newPlot('plotly-chart', plotData.data, plotData.layout);
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
 </html>
