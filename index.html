@@ -13,8 +13,9 @@
 
 <script>
     $(document).ready(function() {
+        let file_name = window.location.pathname;
         // Fetch chart data from the backend
-        $.get('https://raw.githubusercontent.com/yyhtbs-yye/dv4_data/main/plotly.json', function(data) {
+        $.get('https://raw.githubusercontent.com/yyhtbs-yye/dv4_data/main/'+file_name, function(data) {
             let plotData = JSON.parse(data);
             Plotly.newPlot('plotly-chart', plotData.data, plotData.layout);
         });
