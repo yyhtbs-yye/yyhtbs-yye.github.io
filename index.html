@@ -3,36 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plotly Chart from Backend</title>
+    <title>My GitHub Pages Site</title>
+    <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <div id="content"></div>
 
-<div id="plotly-chart"></div>
-
-    <script>
-        $(document).ready(function() {
-            // Extract the 'data' parameter from the URL
-            let dataParam = new URLSearchParams(window.location.search).get('data');
-
-            if (!dataParam) {
-                alert('Data parameter not provided!');
-                return;
-            }
-
-            // Construct the GitHub raw URL based on the parameter
-
-            print(`https://raw.githubusercontent.com/yyhtbs-yye/tus-dv4-2023/main/plotly_charts_json/${dataParam}`)
-            let rawGitHubURL = `https://raw.githubusercontent.com/yyhtbs-yye/tus-dv4-2023/main/plotly_charts_json/${dataParam}`;
-
-            // Fetch chart data from GitHub
-            $.get(rawGitHubURL, function(data) {
-                let plotData = JSON.parse(data);
-                Plotly.newPlot('plotly-chart', plotData.data, plotData.layout);
-            });
-        });
-    </script>
-
+    <script src="js/router.js"></script>
 </body>
 </html>
