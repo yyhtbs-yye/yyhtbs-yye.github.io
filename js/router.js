@@ -28,7 +28,7 @@ function mainPage() {
 function plotlyRenderPage(dataURL) {
     // Ensure the 'content' div includes an element for Plotly to target
     // This line dynamically creates the div where the Plotly chart will be rendered
-    document.getElementById('content').innerHTML = '<h1>Plotly Render Page</h1><div id="plotly-chart"></div>';
+    document.getElementById('content').innerHTML = '<div id="plotly-chart"></div>';
 
     if (!dataURL) {
         alert('URL parameter not provided or invalid!');
