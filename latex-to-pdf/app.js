@@ -155,15 +155,15 @@ async function compile() {
         byId('preview-state').textContent = warnings ? 'Ready · check log' : 'Ready to download';
         showLog(output);
         status(`PDF ready in ${((performance.now() - started) / 1000).toFixed(1)}s · ${Math.max(1, Math.round(bytes.byteLength / 1024))} KB.${warnings ? ' The compiler reported warnings; check the log.' : ' Your download is ready.'}`, 'success');
-        try {
-            await pdfPreview.show(bytes);
-        } catch {
-            if (thisJob === jobId) {
+        // Export only needs the compiled PDF. Keep it available even if PDF.js
+        // is slow or stalls while loading fonts or drawing the preview.
+        pdfPreview.show(bytes).catch(() => {
+            if (thisJob === jobId && pdfBytes === bytes) {
                 preview.hidden = true;
                 empty.hidden = false;
                 emptyMessage('Your PDF is ready.', 'The preview could not be displayed. You can still download the PDF or open it in a new tab.', 'Ready to download');
             }
-        }
+        });
     } catch (error) {
         if (thisJob !== jobId) return;
         const message = error instanceof Error ? error.message : 'Compilation failed. Please try again.';

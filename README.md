@@ -38,6 +38,9 @@ TikZ paths remain vectors, and text becomes font-independent vector outlines.
 Existing raster images in a document remain raster images. SVG output uses the
 PDF page size; use a `standalone` document if you want tightly cropped diagrams.
 Editing the source or starting a new compile cancels any pending SVG export.
+PDF and SVG downloads become available as soon as compilation succeeds; they do
+not wait for the PDF preview to render. The page versions its entry script and
+stylesheet URLs to avoid reusing older cached code after deployment.
 
 MuPDF source and AGPL-3.0-or-later license:
 <https://www.npmjs.com/package/mupdf/v/1.28.1> and
