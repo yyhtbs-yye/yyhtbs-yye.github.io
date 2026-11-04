@@ -11,6 +11,7 @@ route remains available.
 - Paste a complete LaTeX document or open a UTF-8 `.tex` file (maximum 2 MB).
 - Compile with the button or Ctrl/Cmd + Enter. Two passes resolve cross-references.
 - Preview, open, or download the PDF with a custom filename.
+- Download the current preview page as SVG, preserving vector paths and outlining fonts.
 - View compiler warnings/errors in the log, cancel a run, and retry.
 - Choose a basic document, TikZ diagram, or TikZ-optics setup from the example
   selector, then click **Load example**.
@@ -22,6 +23,25 @@ The engine downloads packages/fonts from `https://texlive.texlyre.org/` as
 needed. The mirror receives resource requests (including resource names), and
 must be reachable. Its TeX Live package versions determine package compatibility.
 The initial compile can take longer while these resources load.
+
+### SVG export
+
+After compiling, click **Download SVG** to export the page currently shown in the
+preview. For multi-page documents, navigate to the desired page first; filenames
+include the page number (for example, `document-page-2.svg`). PDF download still
+exports the complete document.
+
+SVG export runs MuPDF **1.28.1** in a separate, short-lived browser worker. It
+loads the pinned `mupdf` npm distribution from jsDelivr on demand (about 10 MB on
+first use). The CDN receives library requests only; the PDF stays on the device.
+TikZ paths remain vectors, and text becomes font-independent vector outlines.
+Existing raster images in a document remain raster images. SVG output uses the
+PDF page size; use a `standalone` document if you want tightly cropped diagrams.
+Editing the source or starting a new compile cancels any pending SVG export.
+
+MuPDF source and AGPL-3.0-or-later license:
+<https://www.npmjs.com/package/mupdf/v/1.28.1> and
+<https://github.com/ArtifexSoftware/mupdf/tree/1.28.1>.
 
 ### TikZ and TikZ-optics
 
@@ -75,5 +95,7 @@ The local preview server is for development only.
 
 See [the vendored runtime notice](latex-to-pdf/vendor/swiftlatex/README.md) for
 SwiftLaTeX's pinned release, source, and license. The [PDF.js notice](latex-to-pdf/vendor/pdfjs/README.md)
-documents the preview renderer and its Apache-2.0 license. TeXlyre provides the
+documents the preview renderer and its Apache-2.0 license. MuPDF provides SVG
+conversion under AGPL-3.0-or-later and is loaded from its pinned npm distribution.
+TeXlyre provides the
 on-demand TeX Live package mirror. The existing chart route uses Plotly and jQuery.

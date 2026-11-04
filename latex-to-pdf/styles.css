@@ -76,13 +76,16 @@ kbd { font: inherit; }
 .pdf-navigation { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 38px; padding: 4px 16px; background: #f6f7fa; border-top: 1px solid #dce2eb; font-size: 10px; color: #75829a; }
 .download-toolbar { padding: 16px 20px; border-top: 1px solid var(--line); min-height: 115px; }
 .download-toolbar > label { display: block; color: #7b879b; font-size: 10px; margin: 0 0 9px; }
-.download-controls { display: flex; gap: 10px; }
+.download-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; }
 .filename-input { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 7px; min-width: 0; flex: 1; background: #fff; }
 .filename-input input { min-width: 0; width: 100%; padding: 10px; font-size: 12px; color: #536078; background: none; border: 0; border-radius: inherit; }
-.filename-input span { color: #9aa4b4; font-size: 12px; padding-right: 10px; }
+.filename-input span { color: #9aa4b4; font-size: 10px; padding-right: 10px; white-space: nowrap; }
 .button-download { background: #243857; border-color: #243857; color: white; }
 .button-download:hover:enabled { background: #152741; }
 .button-download:disabled { background: #ecf0f6; border-color: #e2e7ef; color: #9ca7b9; opacity: 1; }
+.button-svg { color: var(--blue); border-color: #cbd6ef; background: #f5f8ff; }
+.button-svg:disabled { color: #9ca7b9; border-color: #e2e7ef; background: #f5f7fa; opacity: 1; }
+.export-note { margin: 10px 0 0; color: #7b879b; font-size: 10px; line-height: 1.6; }
 .open-pdf { display: inline-block; font-size: 10px; margin-top: 10px; }
 .status-bar { display: flex; align-items: flex-start; gap: 9px; padding: 16px 2px; color: #7c889c; font-size: 11px; line-height: 1.6; }
 .status-dot { width: 5px; height: 5px; border-radius: 50%; background: #98a5bb; margin-top: 6px; flex-shrink: 0; }
@@ -110,7 +113,8 @@ code { color: #677897; font: 10px ui-monospace, Consolas, monospace; }
 .noscript { color: #ad3843; }
 @keyframes breathe { 50% { opacity: .45; } }
 @media (min-width: 1600px) { #latex-source { height: 440px; } }
-@media (max-width: 1000px) { .site-header, main, .site-footer { padding-left: 28px; padding-right: 28px; } .download-controls { flex-wrap: wrap; } .filename-input { flex-basis: 100%; } .download-toolbar { min-height: 150px; } .compile-toolbar { min-height: 120px; } .help-row { gap: 24px; } }
-@media (max-width: 720px) { .site-header, main, .site-footer { padding-left: 20px; padding-right: 20px; } .site-header { height: 68px; } .intro { align-items: flex-start; flex-direction: column; gap: 16px; margin-top: 30px; } .workspace { grid-template-columns: 1fr; gap: 20px; } .description { font-size: 14px; } #latex-source { height: 340px; } .compile-toolbar { min-height: 78px; } .download-controls { flex-wrap: nowrap; } .filename-input { flex-basis: auto; } .download-toolbar { min-height: 115px; } .preview-content { min-height: 420px; } .help-row { grid-template-columns: 1fr; gap: 22px; } .help-row p { font-size: 12px; } .site-footer { flex-direction: column; gap: 6px; } }
-@media (max-width: 380px) { .download-controls { flex-wrap: wrap; } .filename-input { flex-basis: 100%; } .panel-heading, .source-toolbar { padding-left: 14px; padding-right: 14px; } }
+@media (max-width: 1100px) { .download-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filename-input { grid-column: 1 / -1; } }
+@media (max-width: 1000px) { .site-header, main, .site-footer { padding-left: 28px; padding-right: 28px; } .download-toolbar { min-height: 180px; } .compile-toolbar { min-height: 120px; } .help-row { gap: 24px; } }
+@media (max-width: 720px) { .site-header, main, .site-footer { padding-left: 20px; padding-right: 20px; } .site-header { height: 68px; } .intro { align-items: flex-start; flex-direction: column; gap: 16px; margin-top: 30px; } .workspace { grid-template-columns: 1fr; gap: 20px; } .description { font-size: 14px; } #latex-source { height: 340px; } .compile-toolbar { min-height: 78px; } .download-toolbar { min-height: 180px; } .preview-content { min-height: 420px; } .help-row { grid-template-columns: 1fr; gap: 22px; } .help-row p { font-size: 12px; } .site-footer { flex-direction: column; gap: 6px; } }
+@media (max-width: 380px) { .download-controls { grid-template-columns: minmax(0, 1fr); } .panel-heading, .source-toolbar { padding-left: 14px; padding-right: 14px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

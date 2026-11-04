@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert LaTeX to a downloadable PDF in your browser. Paste your source or open a .tex file, compile, and preview the result.">
+    <meta name="description" content="Convert LaTeX to PDF and SVG in your browser. Paste your source or open a .tex file, compile, preview, and download vector graphics.">
     <meta name="theme-color" content="#f8f9fb">
     <title>LaTeX to PDF · yyhtbs-yye</title>
     <link rel="icon" href="data:,">
@@ -91,12 +91,17 @@
                 <div class="download-toolbar">
                     <label for="filename">File name</label>
                     <div class="download-controls">
-                        <div class="filename-input"><input id="filename" type="text" value="document" maxlength="100" spellcheck="false" aria-label="PDF file name"><span>.pdf</span></div>
+                        <div class="filename-input"><input id="filename" type="text" value="document" maxlength="100" spellcheck="false" aria-label="Download file name"><span>.pdf / .svg</span></div>
                         <button class="button button-download" id="download-button" type="button" disabled>
                             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg>
                             Download PDF
                         </button>
+                        <button class="button button-svg" id="svg-button" type="button" aria-describedby="svg-help" disabled>
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg>
+                            <span id="svg-button-label">Download SVG</span>
+                        </button>
                     </div>
+                    <p class="export-note" id="svg-help">SVG exports the current preview page, with fonts converted to vector outlines.</p>
                     <a class="open-pdf" id="open-pdf" target="_blank" rel="noopener" hidden>Open PDF in a new tab <span aria-hidden="true">↗</span></a>
                 </div>
             </section>
@@ -122,7 +127,7 @@
 
     <footer class="site-footer">
         <span>A small tool for well-crafted documents.</span>
-        <span>Powered by <a href="https://github.com/SwiftLaTeX/SwiftLaTeX/tree/v20022022" target="_blank" rel="noopener">SwiftLaTeX</a> &amp; <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a> <span aria-hidden="true">·</span> <a href="vendor/swiftlatex/LICENSE">AGPL-3.0</a> / <a href="vendor/pdfjs/LICENSE">Apache-2.0</a></span>
+        <span>Powered by <a href="https://github.com/SwiftLaTeX/SwiftLaTeX/tree/v20022022" target="_blank" rel="noopener">SwiftLaTeX</a>, <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a> &amp; <a href="https://mupdf.com/" target="_blank" rel="noopener">MuPDF</a> <span aria-hidden="true">·</span> <a href="vendor/swiftlatex/LICENSE">AGPL-3.0</a> / <a href="vendor/pdfjs/LICENSE">Apache-2.0</a></span>
     </footer>
 </body>
 </html>

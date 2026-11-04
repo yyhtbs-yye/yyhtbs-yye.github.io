@@ -1,6 +1,8 @@
 import { LatexEngine } from './engine.js';
 import { PdfPreview } from './preview.js';
 import { examples } from './examples.js';
+import { SvgExporter } from './svg-exporter.js';
+import { downloadName, downloadUrl } from './downloads.js';
 
 const example = examples.basic.source;
 
@@ -13,6 +15,9 @@ const exampleButton = byId('example-button');
 const exampleSelect = byId('example-select');
 const fileInput = byId('file-input');
 const downloadButton = byId('download-button');
+const svgButton = byId('svg-button');
+const svgLabel = byId('svg-button-label');
+const svgExporter = new SvgExporter();
 const preview = byId('pdf-preview');
 const pdfPreview = new PdfPreview(byId('pdf-pages'), byId('previous-page'), byId('next-page'), byId('page-number'));
 const empty = byId('preview-empty');
@@ -23,8 +28,12 @@ const openPdf = byId('open-pdf');
 const maxBytes = 2 * 1024 * 1024;
 let engine = new LatexEngine();
 let pdfUrl = null;
+let pdfBytes = null;
 let busy = false;
 let jobId = 0;
+let svgBusy = false;
+let svgJobId = 0;
+const svgUrls = new Set();
 
 function status(message, tone = 'neutral') {
     byId('status-message').textContent = message;
@@ -39,11 +48,19 @@ function setBusy(value) {
     exampleButton.disabled = value;
     exampleSelect.disabled = value;
     fileInput.disabled = value;
+    svgButton.disabled = value || svgBusy || !pdfBytes;
     cancelButton.hidden = !value;
     byId('preview-content').setAttribute('aria-busy', String(value));
 }
 
 function clearPdf() {
+    ++svgJobId;
+    svgExporter.cancel();
+    svgBusy = false;
+    svgLabel.textContent = 'Download SVG';
+    svgButton.disabled = true;
+    svgButton.setAttribute('aria-busy', 'false');
+    pdfBytes = null;
     pdfPreview.clear();
     preview.hidden = true;
     openPdf.hidden = true;
@@ -69,11 +86,6 @@ function updateSource() {
     log.textContent = '';
     emptyMessage('Ready for a fresh PDF.', 'Select Compile PDF to preview and download this document.', 'Ready to compile');
     status('Source updated. Compile to create a new PDF.');
-}
-
-function pdfFilename() {
-    const name = filename.value.trim().replace(/\.pdf$/i, '').replace(/[<>:"/\\|?*\u0000-\u001f]/g, '-').replace(/[. ]+$/, '');
-    return `${name || 'document'}.pdf`;
 }
 
 function showLog(text, open = false) {
@@ -133,6 +145,7 @@ async function compile() {
             throw new Error('The compiler did not produce a valid PDF. See the log below.');
         }
         pdfUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+        pdfBytes = bytes;
         preview.hidden = false;
         empty.hidden = true;
         openPdf.href = pdfUrl;
@@ -221,17 +234,49 @@ exampleButton.addEventListener('click', () => {
 });
 downloadButton.addEventListener('click', () => {
     if (!pdfUrl || busy) return;
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = pdfFilename();
-    document.body.append(link);
-    link.click();
-    link.remove();
+    downloadUrl(pdfUrl, downloadName(filename.value, 'pdf'));
+});
+svgButton.addEventListener('click', async () => {
+    if (!pdfBytes || busy || svgBusy) return;
+    const thisExport = ++svgJobId;
+    const bytes = pdfBytes;
+    const page = pdfPreview.page;
+    const name = filename.value;
+    svgBusy = true;
+    svgButton.disabled = true;
+    svgButton.setAttribute('aria-busy', 'true');
+    svgLabel.textContent = 'Creating SVG…';
+    status(`Creating SVG for page ${page}… The first SVG export downloads a converter (about 10 MB).`, 'busy');
+    try {
+        const result = await svgExporter.export(bytes, page);
+        if (thisExport !== svgJobId || bytes !== pdfBytes) return;
+        const url = URL.createObjectURL(new Blob([result.svg], { type: 'image/svg+xml;charset=utf-8' }));
+        svgUrls.add(url);
+        downloadUrl(url, downloadName(name, 'svg', page, result.pageCount));
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+            svgUrls.delete(url);
+        }, 30000);
+        status(`SVG downloaded for page ${page} of ${result.pageCount}. Text is outlined to preserve LaTeX fonts.`, 'success');
+    } catch (error) {
+        if (thisExport !== svgJobId) return;
+        const message = error instanceof Error ? error.message : 'SVG export failed. Please try again.';
+        status(`${message} You can still download the PDF.`, 'error');
+    } finally {
+        if (thisExport === svgJobId) {
+            svgBusy = false;
+            svgLabel.textContent = 'Download SVG';
+            svgButton.setAttribute('aria-busy', 'false');
+            svgButton.disabled = busy || !pdfBytes;
+        }
+    }
 });
 window.addEventListener('pagehide', () => {
     ++jobId;
     engine.dispose();
     clearPdf();
+    svgUrls.forEach((url) => URL.revokeObjectURL(url));
+    svgUrls.clear();
     setBusy(false);
 });
 
