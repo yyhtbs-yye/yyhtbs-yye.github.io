@@ -83,6 +83,9 @@ The ideal paraxial model supports real images, virtual images, and an object at
 the focal point. It is not a general multi-element optical ray tracer.
 
 - Move the object-distance and focal-length sliders to update the diagram.
+- The lens stays at the canvas center (world origin). Coordinates use a fixed
+  3 CSS pixels per cm on both axes, with no auto-fit, zoom, or pan. Parameters
+  and container size never change that scale. Out-of-view geometry is clipped.
 - Edit the versioned JSON scene to set initial parameters and slider ranges.
 - Copy the generated URL into Notion's `/embed` block, or use the generated
   iframe code in an editor that allows HTML iframes. Plain text cannot run it.

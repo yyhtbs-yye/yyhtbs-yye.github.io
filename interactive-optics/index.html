@@ -7,7 +7,7 @@
   <meta name="description" content="用 JSON 配置薄透镜实验，实时调整物距和焦距，并嵌入 Notion 或网页。">
   <script>if(new URLSearchParams(location.search).get('embed')==='1')document.documentElement.dataset.embed='true';</script>
   <link rel="stylesheet" href="styles.css?v=1">
-  <script type="module" src="app.js?v=1"></script>
+  <script type="module" src="app.js?v=fixed-view-1"></script>
 </head>
 <body>
   <main>
@@ -44,6 +44,7 @@
         <div class="measurements"><span>像距 <strong id="image-distance"></strong></span><span>放大率 <strong id="magnification"></strong></span></div>
         <canvas id="ray-diagram" role="img" aria-label="薄透镜成像光路"></canvas>
         <div class="legend"><span><i class="object-key"></i>物体</span><span><i class="ray-key"></i>光线</span><span><i class="image-key"></i>像</span></div>
+        <p id="view-note" class="model-note" aria-live="polite"></p>
       </div>
     </section>
 

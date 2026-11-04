@@ -1,4 +1,5 @@
 import { DEFAULT_SCENE, validateScene, parseScene, solve, embedURL, iframeCode } from './model.js';
+import { fixedView } from './view.js';
 
 const $ = (id) => document.getElementById(id);
 const embedded = document.documentElement.dataset.embed === 'true';
@@ -18,11 +19,7 @@ function diagram(result) {
   const blue = css.getPropertyValue('--blue').trim(), orange = css.getPropertyValue('--orange').trim();
   const d = scene.object.distance, f = scene.lens.focalLength, h = scene.object.height;
   const di = result.distance, ih = result.magnification * h;
-  const min = -Math.max(d + 8, f + 8, di < 0 ? Math.min(100, -di + 8) : 0);
-  const max = Math.max(f + 10, di > 0 && Number.isFinite(di) ? Math.min(100, di + 10) : 25);
-  const extent = Math.max(18, Math.min(40, Number.isFinite(ih) ? Math.abs(ih) + 5 : 18), h + 4);
-  const x = (v) => 20 + (v - min) / (max - min) * (width - 40);
-  const y = (v) => height / 2 - v / extent * (height / 2 - 28);
+  const { min, max, extent, x, y } = fixedView(width, height);
   const line = (a, b, c, e, color, dash = [], weight = 1.8) => {
     ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = weight; ctx.setLineDash(dash);
     ctx.moveTo(x(a), y(b)); ctx.lineTo(x(c), y(e)); ctx.stroke(); ctx.setLineDash([]);
@@ -51,13 +48,15 @@ function diagram(result) {
   }
   arrow(-d, h, ink); label('物体', -d, h + 3, ink);
   const visible = Number.isFinite(di) && di > min + 2 && di < max - 2 && Math.abs(ih) < extent - 2;
-  if (visible) { arrow(di, ih, orange, di < 0); label(di > 0 ? '实像' : '虚像', di, ih + (ih > 0 ? 3 : -3), orange); }
-  const lx = x(0), top = 22, bottom = height - 22;
+  // Canvas clips the image at its actual coordinates, including partly visible images.
+  if (Number.isFinite(di)) { arrow(di, ih, orange, di < 0); label(di > 0 ? '实像' : '虚像', di, ih + (ih > 0 ? 5 : -5), orange); }
+  const lx = x(0), top = height / 2 - 90, bottom = height / 2 + 90;
   ctx.beginPath(); ctx.moveTo(lx, top);
   ctx.bezierCurveTo(lx + 17, top + 20, lx + 17, bottom - 20, lx, bottom);
   ctx.bezierCurveTo(lx - 17, bottom - 20, lx - 17, top + 20, lx, top);
   ctx.fillStyle = blue; ctx.globalAlpha = 0.1; ctx.fill(); ctx.globalAlpha = 1;
   ctx.strokeStyle = blue; ctx.lineWidth = 2; ctx.stroke();
+  $('view-note').textContent = [d >= -min ? '物体超出视野' : '', result.kind !== 'infinite' && !visible ? '像超出视野' : ''].filter(Boolean).join(' · ') || '固定坐标 · 透镜中心 (0, 0)';
   canvas.setAttribute('aria-label', `物距 ${fmt(d)} cm，焦距 ${fmt(f)} cm；${$('image-description').textContent}，像距 ${fmt(di)} cm，放大率 ${fmt(result.magnification)}${visible ? '' : '，像不在当前视野内'}`);
 }
 
