@@ -36,6 +36,12 @@ function mainPage() {
                 <p>Write or upload a LaTeX document, compile it, and download your PDF.</p>
                 <span class="tool-link">Open converter <span aria-hidden="true">→</span></span>
             </a>
+            <a class="tool-card" href="interactive-optics/">
+                <span class="tool-symbol" aria-hidden="true">↗</span>
+                <h2>Interactive optics <span aria-hidden="true">↗</span></h2>
+                <p>Explore a thin-lens experiment and embed it in Notion or a webpage.</p>
+                <span class="tool-link">Open experiment <span aria-hidden="true">→</span></span>
+            </a>
         </main>`;
 }
 

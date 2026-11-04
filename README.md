@@ -75,6 +75,28 @@ Use a current browser with WebAssembly and Web Workers. A vendored PDF.js render
 provides a responsive preview with page navigation. The download and new-tab link
 remain available if preview rendering fails.
 
+## Interactive optics
+
+`/interactive-optics/` is an interactive, browser-local thin-lens experiment.
+It uses Canvas and JavaScript; embedding includes the live controls and solver.
+The ideal paraxial model supports real images, virtual images, and an object at
+the focal point. It is not a general multi-element optical ray tracer.
+
+- Move the object-distance and focal-length sliders to update the diagram.
+- Edit the versioned JSON scene to set initial parameters and slider ranges.
+- Copy the generated URL into Notion's `/embed` block, or use the generated
+  iframe code in an editor that allows HTML iframes. Plain text cannot run it.
+- `?embed=1` hides the surrounding editor/share UI. The `scene` query parameter
+  carries validated JSON, so each copied link preserves its initial experiment.
+  Slider changes affect the current session; copy a new link to share changes.
+- `/interactive-optics/embed-demo.html` demonstrates an actual iframe.
+
+There are no external scripts, cookies, login requirements, or compilation
+services for this tool. The host may receive the scene in the URL query string.
+The default iframe height is 720px to accommodate the stacked mobile layout;
+it can be reduced for a wide, two-column embed. The host editor controls iframe
+size. A host's iframe sandbox must allow scripts for interactive controls.
+
 ## Local development
 
 Use Node.js 20.11 or later; there are no npm dependencies to install.

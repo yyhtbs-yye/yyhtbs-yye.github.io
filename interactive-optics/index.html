@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>交互光学 · 可嵌入的薄透镜实验</title>
+  <meta name="description" content="用 JSON 配置薄透镜实验，实时调整物距和焦距，并嵌入 Notion 或网页。">
+  <script>if(new URLSearchParams(location.search).get('embed')==='1')document.documentElement.dataset.embed='true';</script>
+  <link rel="stylesheet" href="styles.css?v=1">
+  <script type="module" src="app.js?v=1"></script>
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <a class="back" href="../">← Tools</a>
+      <p class="eyebrow">INTERACTIVE OPTICS</p>
+      <h1>把光路变成可以操作的实验。</h1>
+      <p class="intro">调整参数，即时观察成像。用一个链接，把整个交互实验嵌入笔记或网页。</p>
+    </header>
+
+    <section class="experiment" aria-label="薄透镜交互实验">
+      <div class="parameters">
+        <div class="experiment-heading"><span class="dot"></span><h2>会聚薄透镜</h2><span class="badge">LIVE</span></div>
+        <div class="equation" aria-label="一除以焦距等于一除以物距加一除以像距">
+          <span class="fraction"><span>1</span><span>f</span></span><span>=</span>
+          <span class="fraction"><span>1</span><span>d<sub>o</sub></span></span><span>+</span>
+          <span class="fraction"><span>1</span><span>d<sub>i</sub></span></span>
+        </div>
+        <p id="numeric-equation" class="numeric-equation"></p>
+        <p id="image-description" class="image-description" role="status" aria-live="polite"></p>
+        <div class="controls">
+          <div class="control">
+            <div class="control-label"><label for="object-distance">物距 d<sub>o</sub></label><output id="object-value" for="object-distance"></output></div>
+            <input id="object-distance" type="range" min="5" max="80" step="1" value="40">
+          </div>
+          <div class="control">
+            <div class="control-label"><label for="focal-length">焦距 f</label><output id="focus-value" for="focal-length"></output></div>
+            <input id="focal-length" type="range" min="5" max="30" step="1" value="10">
+          </div>
+        </div>
+        <p class="model-note">理想薄透镜 · 近轴模型 · 单位 cm</p>
+      </div>
+      <div class="drawing-panel">
+        <div class="measurements"><span>像距 <strong id="image-distance"></strong></span><span>放大率 <strong id="magnification"></strong></span></div>
+        <canvas id="ray-diagram" role="img" aria-label="薄透镜成像光路"></canvas>
+        <div class="legend"><span><i class="object-key"></i>物体</span><span><i class="ray-key"></i>光线</span><span><i class="image-key"></i>像</span></div>
+      </div>
+    </section>
+
+    <section class="publishing" aria-labelledby="embed-heading">
+      <div class="section-heading"><div><p class="eyebrow">SHARE THE EXPERIMENT</p><h2 id="embed-heading">嵌入后，依然可以拖动。</h2></div><a href="embed-demo.html">查看 iframe 示例 ↗</a></div>
+      <p>Notion：输入 <code>/embed</code>，粘贴下面的链接。HTML 或允许 iframe 的编辑器：使用嵌入代码。</p>
+      <div class="share-row"><label for="share-url">嵌入链接</label><div class="copy-field"><input id="share-url" readonly><button id="copy-url" type="button">复制链接</button></div></div>
+      <div class="share-row"><label for="iframe-code">iframe 代码</label><div class="copy-field"><textarea id="iframe-code" readonly rows="3" spellcheck="false"></textarea><button id="copy-code" type="button">复制代码</button></div></div>
+      <p class="help">链接包含当前参数；接收者打开后可以继续调整。普通 Markdown 是否允许 iframe，取决于编辑器。</p>
+      <p id="share-status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <details class="configuration">
+      <summary>用 JSON 配置这个实验</summary>
+      <p>当前支持 <code>thin-lens</code> 模型。参数决定初始状态，<code>controls</code> 决定滑块范围。应用后即可复制新的嵌入链接。</p>
+      <label for="scene-json">场景 JSON</label>
+      <textarea id="scene-json" rows="19" spellcheck="false"></textarea>
+      <div class="config-actions"><button id="apply-json" type="button">应用 JSON</button><button id="reset-scene" class="secondary" type="button">恢复默认</button><span id="config-status" role="status" aria-live="polite"></span></div>
+    </details>
+    <p id="load-error" class="error" role="alert" hidden></p>
+    <footer>无需 LaTeX · 无需登录 · 计算在浏览器中完成</footer>
+    <noscript>请启用 JavaScript 以运行交互实验。</noscript>
+  </main>
+</body>
+</html>
