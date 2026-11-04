@@ -14,15 +14,29 @@ function router() {
             // Pass queryParams or its specific value to the function as needed
             plotlyRenderPage(queryParams.get('data'));
             break;
+        case '/latex-to-pdf':
+            window.location.replace('latex-to-pdf/');
+            break;
         // Define other cases as needed
         default:
-            // Handle default case
+            mainPage();
             break;
     }
 }
 
 function mainPage() {
-    document.getElementById('content').innerHTML = '<h1>Main Page</h1>';
+    document.getElementById('content').innerHTML = `
+        <main class="home">
+            <p class="eyebrow">YYHTBS-YYE / TOOLS</p>
+            <h1>A few useful things.</h1>
+            <p class="home-intro">Simple tools for documents and data, right in your browser.</p>
+            <a class="tool-card" href="latex-to-pdf/">
+                <span class="tool-symbol" aria-hidden="true">T<sub>E</sub>X</span>
+                <h2>LaTeX to PDF <span aria-hidden="true">↗</span></h2>
+                <p>Write or upload a LaTeX document, compile it, and download your PDF.</p>
+                <span class="tool-link">Open converter <span aria-hidden="true">→</span></span>
+            </a>
+        </main>`;
 }
 
 function plotlyRenderPage(dataURL) {

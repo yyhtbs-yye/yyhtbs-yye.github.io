@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert LaTeX to a downloadable PDF in your browser. Paste your source or open a .tex file, compile, and preview the result.">
+    <meta name="theme-color" content="#f8f9fb">
+    <title>LaTeX to PDF · yyhtbs-yye</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="app.js"></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="../">yyhtbs-yye<span> / tools</span></a>
+        <a class="back-link" href="../"><span aria-hidden="true">←</span> All tools</a>
+    </header>
+
+    <main>
+        <div class="intro">
+            <div>
+                <p class="eyebrow">DOCUMENT TOOLS</p>
+                <h1>LaTeX <span class="title-arrow" aria-hidden="true">→</span> PDF</h1>
+                <p class="description">From source to a beautifully typeset document.</p>
+            </div>
+            <span class="privacy-badge"><span class="privacy-dot" aria-hidden="true"></span> Compiles in your browser</span>
+        </div>
+
+        <div class="workspace">
+            <section class="panel source-panel" aria-labelledby="source-heading">
+                <div class="panel-heading">
+                    <h2 id="source-heading"><span class="step">01</span> LaTeX source</h2>
+                    <span class="file-badge" id="source-name">main.tex</span>
+                </div>
+                <div class="source-toolbar">
+                    <button class="button button-small" id="upload-button" type="button">
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 13V3m-4 4 4-4 4 4M3 12v5h14v-5"/></svg>
+                        Open .tex
+                    </button>
+                    <input id="file-input" type="file" accept=".tex,text/x-tex" hidden>
+                    <div class="example-controls">
+                        <select id="example-select" aria-label="Example document">
+                            <option value="basic">Basic document</option>
+                            <option value="tikz">TikZ diagram</option>
+                            <option value="optics">TikZ optics</option>
+                        </select>
+                        <button class="text-button" id="example-button" type="button">Load example</button>
+                    </div>
+                </div>
+                <label class="sr-only" for="latex-source">LaTeX source</label>
+                <textarea id="latex-source" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-describedby="source-help" placeholder="Paste your LaTeX document here…"></textarea>
+                <div class="editor-footer">
+                    <span id="source-stats">0 lines</span>
+                    <span>UTF-8 <span class="footer-divider">/</span> pdfLaTeX</span>
+                </div>
+                <div class="compile-toolbar">
+                    <button class="button button-primary" id="compile-button" type="button">
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg>
+                        Compile PDF
+                    </button>
+                    <button class="text-button" id="cancel-button" type="button" hidden>Cancel</button>
+                    <span class="keyboard-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+                </div>
+            </section>
+
+            <section class="panel preview-panel" aria-labelledby="preview-heading">
+                <div class="panel-heading">
+                    <h2 id="preview-heading"><span class="step">02</span> PDF preview</h2>
+                    <span class="preview-badge" id="preview-state">Waiting for source</span>
+                </div>
+                <div class="preview-content" id="preview-content" aria-busy="false">
+                    <div class="preview-empty" id="preview-empty">
+                        <div class="paper-icon" aria-hidden="true">
+                            <span class="paper-tex">T<sub>E</sub>X</span>
+                            <span class="paper-line"></span><span class="paper-line short"></span>
+                            <span class="paper-equation">E = mc²</span>
+                            <span class="paper-line"></span><span class="paper-line short"></span>
+                        </div>
+                        <h3 id="empty-title">Your next document starts here.</h3>
+                        <p id="empty-description">Add your LaTeX source on the left,<br>then select Compile PDF.</p>
+                    </div>
+                    <div class="pdf-viewer" id="pdf-preview" hidden>
+                        <div class="pdf-pages" id="pdf-pages" aria-label="Compiled PDF preview"></div>
+                        <div class="pdf-navigation">
+                            <button class="text-button" id="previous-page" type="button" aria-label="Previous PDF page" disabled>← Previous</button>
+                            <span id="page-number" role="status" aria-live="polite">Loading preview…</span>
+                            <button class="text-button" id="next-page" type="button" aria-label="Next PDF page" disabled>Next →</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="download-toolbar">
+                    <label for="filename">File name</label>
+                    <div class="download-controls">
+                        <div class="filename-input"><input id="filename" type="text" value="document" maxlength="100" spellcheck="false" aria-label="PDF file name"><span>.pdf</span></div>
+                        <button class="button button-download" id="download-button" type="button" disabled>
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg>
+                            Download PDF
+                        </button>
+                    </div>
+                    <a class="open-pdf" id="open-pdf" target="_blank" rel="noopener" hidden>Open PDF in a new tab <span aria-hidden="true">↗</span></a>
+                </div>
+            </section>
+        </div>
+
+        <div class="status-bar" id="status-bar" data-tone="neutral">
+            <span class="status-dot" aria-hidden="true"></span>
+            <p id="status-message" role="status" aria-live="polite" aria-atomic="true">Ready when you are. Try the example or open your own .tex file.</p>
+        </div>
+
+        <details class="compile-log" id="log-details" hidden>
+            <summary>Compilation log <span>Details from pdfLaTeX</span></summary>
+            <pre id="compile-log" tabindex="0" aria-label="Compilation log"></pre>
+        </details>
+
+        <div class="help-row" id="source-help">
+            <div><h3>A complete document, please.</h3><p>Include <code>\documentclass</code>, <code>\begin{document}</code>, and <code>\end{document}</code>. This tool accepts one .tex file, up to 2 MB.</p></div>
+            <div><h3>Your source stays on this device.</h3><p>The compiler runs locally. TeX packages and fonts download from the <a href="https://github.com/TeXlyre/texlive-ondemand-server" target="_blank" rel="noopener">TeXlyre mirror</a> as needed, so an internet connection is required. The first compile takes a little longer.</p></div>
+            <div><h3>TikZ and TikZ-optics supported.</h3><p>Use <code>\usepackage{tikz}</code> and <code>\usetikzlibrary{optics,shapes.misc}</code>; add <code>use optics</code> to the picture options. Try either diagram example above. This tool supports pdfLaTeX; additional files, system fonts, XeLaTeX, and LuaLaTeX are not supported.</p></div>
+        </div>
+        <noscript><p class="noscript">Enable JavaScript to run the LaTeX compiler in your browser.</p></noscript>
+    </main>
+
+    <footer class="site-footer">
+        <span>A small tool for well-crafted documents.</span>
+        <span>Powered by <a href="https://github.com/SwiftLaTeX/SwiftLaTeX/tree/v20022022" target="_blank" rel="noopener">SwiftLaTeX</a> &amp; <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a> <span aria-hidden="true">·</span> <a href="vendor/swiftlatex/LICENSE">AGPL-3.0</a> / <a href="vendor/pdfjs/LICENSE">Apache-2.0</a></span>
+    </footer>
+</body>
+</html>
